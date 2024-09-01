@@ -6,7 +6,7 @@ import { ProductDetail } from "../views/ProductDetail";
 import CategoryList from "../views/CategoryList";
 import AddUser from "../views/AddUser";
 
-const url = 'http://www.daseas.cloud'
+const url = 'https://www.daseas.cloud'
 
 const router = createBrowserRouter([
   {
