@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Toastify from "toastify-js";
 
-export default function LoginPage() {
+export default function LoginPage({url}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,7 +12,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(`http://www.daseas.cloud/login`, {
+      const { data } = await axios.post(`${url}/login`, {
         email,
         password,
       });
