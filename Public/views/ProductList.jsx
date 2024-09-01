@@ -126,7 +126,6 @@ export default function ProductList({ url }) {
         </div>
       </div>
 
-      {/* Loading Indicator */}
       {loading ? (
         <div className="flex justify-center items-center">
           <div className="flex justify-center">
