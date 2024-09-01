@@ -10,7 +10,7 @@ export default function ProductList({ url }) {
   const [sort, setSort] = useState("");
   const [totalPage, setTotalPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   function getPagination() {
     let temp = [];
@@ -21,40 +21,31 @@ export default function ProductList({ url }) {
   }
 
   function handlePrev() {
-    if(currentPage <= 0) {
-      setCurrentPage(currentPage)
-    }
-
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      setCurrentPage((prev) => prev - 1);
     }
   }
 
   function handleNext() {
     if (currentPage < totalPage) {
-      setCurrentPage(currentPage + 1);
-    }
-
-    if(currentPage >= totalPage){
-      setCurrentPage(currentPage)
+      setCurrentPage((prev) => prev + 1);
     }
   }
 
-
   async function fetchProducts() {
     try {
-        const { data } = await axios.get(
-            `${url}/pub/products?search=${search}&filter=${filtered}&sort=${sort}&page[number]=${currentPage}&page[size]=10`
-        );
+      const { data } = await axios.get(
+        `${url}/pub/products?search=${search}&filter=${filtered}&sort=${sort}&page[number]=${currentPage}&page[size]=10`
+      );
 
-        console.log(data);
-        setProducts(data.data);
-        setTotalPage(data.totalPage);
-        setCurrentPage(data.current_page); 
+      console.log(data);
+      setProducts(data.data);
+      setTotalPage(data.totalPage);
+      setCurrentPage(data.current_page); 
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
-}
+  }
 
   async function fetchCategories() {
     try {
@@ -82,7 +73,7 @@ export default function ProductList({ url }) {
               className="input input-bordered w-24 md:w-auto"
               onChange={(e) => {
                 setSearch(e.target.value);
-                setCurrentPage(1); 
+                setCurrentPage(1);
               }}
             />
           </div>
@@ -95,7 +86,7 @@ export default function ProductList({ url }) {
                 className="select select-ghost w-52 rounded-box"
                 onChange={(e) => {
                   setFiltered(e.target.value);
-                  setCurrentPage(1); 
+                  setCurrentPage(1);
                 }}
                 value={filtered}
               >
@@ -116,7 +107,7 @@ export default function ProductList({ url }) {
                 className="select select-ghost w-52 rounded-box"
                 onChange={(e) => {
                   setSort(e.target.value);
-                  setCurrentPage(1); 
+                  setCurrentPage(1);
                 }}
                 value={sort}
               >
@@ -142,7 +133,12 @@ export default function ProductList({ url }) {
               <h2 className="card-title">{product.name}</h2>
               <p>{product.description}</p>
               <div className="card-actions justify-end">
-                <button className="btn btn-primary" onClick={() => navigate(`${product.id}`)}>Details</button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => navigate(`${product.id}`)}
+                >
+                  Details
+                </button>
               </div>
             </div>
           </div>
@@ -150,7 +146,7 @@ export default function ProductList({ url }) {
       </div>
 
       <div className="join">
-        <button className="join-item btn" onClick={handlePrev}>
+        <button className="join-item btn" onClick={handlePrev} disabled={currentPage === 1}>
           «
         </button>
         {getPagination().map((el) => (
@@ -164,7 +160,7 @@ export default function ProductList({ url }) {
             {el}
           </button>
         ))}
-        <button className="join-item btn" onClick={handleNext}>
+        <button className="join-item btn" onClick={handleNext} disabled={currentPage === totalPage}>
           »
         </button>
       </div>
