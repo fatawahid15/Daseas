@@ -18,6 +18,7 @@ export default function LoginPage({url}) {
       });
 
       localStorage.setItem("access_token", data.access_token);
+      console.log(url);
       Toastify({
         text: "Login success",
         duration: 3000,
