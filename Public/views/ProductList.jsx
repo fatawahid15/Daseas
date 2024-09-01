@@ -10,6 +10,7 @@ export default function ProductList({ url }) {
   const [sort, setSort] = useState("");
   const [totalPage, setTotalPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   function getPagination() {
@@ -34,16 +35,18 @@ export default function ProductList({ url }) {
 
   async function fetchProducts() {
     try {
+      setLoading(true);
       const { data } = await axios.get(
         `${url}/pub/products?search=${search}&filter=${filtered}&sort=${sort}&page[number]=${currentPage}&page[size]=10`
       );
 
-      console.log(data);
       setProducts(data.data);
       setTotalPage(data.totalPage);
-      setCurrentPage(data.current_page); 
+      setCurrentPage(data.current_page);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -123,47 +126,74 @@ export default function ProductList({ url }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 m-20">
-        {products.map((product) => (
-          <div className="card bg-base-100 w-96 shadow-xl" key={product.id}>
-            <figure>
-              <img src={product.imgUrl} alt={product.name} />
-            </figure>
-            <div className="card-body">
-              <h2 className="card-title">{product.name}</h2>
-              <p>{product.description}</p>
-              <div className="card-actions justify-end">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => navigate(`${product.id}`)}
-                >
-                  Details
-                </button>
-              </div>
-            </div>
+      {/* Loading Indicator */}
+      {loading ? (
+        <div className="flex justify-center items-center">
+          <div className="flex justify-center">
+            <span className="loading loading-spinner text-primary"></span>
+            <span className="loading loading-spinner text-secondary"></span>
+            <span className="loading loading-spinner text-accent"></span>
+            <span className="loading loading-spinner text-neutral"></span>
+            <span className="loading loading-spinner text-info"></span>
+            <span className="loading loading-spinner text-success"></span>
+            <span className="loading loading-spinner text-warning"></span>
           </div>
-        ))}
-      </div>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-4 gap-4 m-20">
+            {products.map((product) => (
+              <div className="card bg-base-100 w-96 shadow-xl" key={product.id}>
+                <figure>
+                  <img src={product.imgUrl} alt={product.name} />
+                </figure>
+                <div className="card-body">
+                  <h2 className="card-title">{product.name}</h2>
+                  <p>{product.description}</p>
+                  <div className="card-actions justify-end">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => navigate(`${product.id}`)}
+                    >
+                      Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
 
-      <div className="join">
-        <button className="join-item btn" onClick={handlePrev} disabled={currentPage === 1}>
-          «
-        </button>
-        {getPagination().map((el) => (
-          <button
-            key={el}
-            className={
-              el === currentPage ? "join-item btn btn-active" : "join-item btn"
-            }
-            onClick={() => setCurrentPage(el)}
-          >
-            {el}
-          </button>
-        ))}
-        <button className="join-item btn" onClick={handleNext} disabled={currentPage === totalPage}>
-          »
-        </button>
-      </div>
+          <div className="join">
+            <button
+              className="join-item btn"
+              onClick={handlePrev}
+              disabled={currentPage === 1}
+            >
+              «
+            </button>
+            {getPagination().map((el) => (
+              <button
+                key={el}
+                className={
+                  el === currentPage
+                    ? "join-item btn btn-active"
+                    : "join-item btn"
+                }
+                onClick={() => setCurrentPage(el)}
+              >
+                {el}
+              </button>
+            ))}
+            <button
+              className="join-item btn"
+              onClick={handleNext}
+              disabled={currentPage === totalPage}
+            >
+              »
+            </button>
+          </div>
+        </>
+      )}
     </>
   );
 }
