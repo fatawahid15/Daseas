@@ -4,8 +4,7 @@ import { ProductDetail } from "../views/ProductDetail";
 import BaseLayout from "../views/BaseLayout";
 
 
-const proxy = 'https://cors-anywhere.herokuapp.com/';
-const url = `${proxy}http://www.daseas.cloud`;
+const url = `https://www.daseas.cloud`;
 
 
 const router = createBrowserRouter([
